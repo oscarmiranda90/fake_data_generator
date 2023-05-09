@@ -29,7 +29,7 @@ def generator_order(number):
         order_id = str(random.randint(100000, 999999)).zfill(5)
 
         ## print the full data set
-        order_list.append([f'{random_user}', f'{item}', f'{random_date}', f'{order_id}'])
+        order_list.append(['(' + f'{random_user}', f"'{order_id}'", f"'{item}'", f"'{random_date}')",''])
         count += 1
         with open('order_data.csv', mode='w', newline='', encoding='UTF8') as file:
             writer = csv.writer(file)
@@ -48,13 +48,17 @@ def generator(number):
         # create every variable
         name = random.choice(data_lists.first_names)
         surname = random.choice(data_lists.last_names)
-        mail = name.lower() +'_'+ surname.lower() + random.choice(data_lists.email_suffix)
+        emailchoice = random.choice(data_lists.email_suffix)
+        mail = name.lower() +'_'+ surname.lower() + emailchoice
         nation = random.choice(list(data_lists.country_keys))
         city = random.choice(data_lists.countries_cities[nation])
 
+
         ## print the full data set
         formatted_count = '{:05d}'.format(count) # 00001 format for the id
-        user_list.append([f'{str(formatted_count)}', f'{name}', f'{surname}', f'{nation}',  f'{city}', f'{mail}'])
+        # for some weird reason if i added at the end a comma between " , " the final output gave me something that
+        # does not work on SQL
+        user_list.append(['(' + f'{formatted_count}', f"'{name}'", f"'{surname}'", f"'{nation}'", f"'{city}'", f"'{mail}')",''])
         count += 1
 
 
