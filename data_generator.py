@@ -1,6 +1,5 @@
-### This is a simple fake data creator i made to practice queries on SQL, you can use it as you see fit :)
-### Oscar Crescente oscar.crescente@icloud.com
 import random
+import string
 from datetime import datetime, timedelta
 import data_lists
 import csv
@@ -16,20 +15,34 @@ def generator_order(number):
         item = random.choice(data_lists.items)
         start_date = datetime(2021, 1, 1)  # Starting date
         end_date = datetime(2023, 12, 31)  # Ending date
-
-        # Generate 10 random dates between start_date and end_date
+        # Generate random dates between start_date and end_date
         for i in range(number):
             date = start_date + timedelta(days=random.randint(0, (end_date - start_date).days))
             random_date = date.strftime('%Y-%m-%d')
-
         # create a random number to work as user id
         random_user = str(random.randint(0, number)).zfill(5)
 
-        # create a random number as order number
-        order_id = str(random.randint(100000, 999999)).zfill(5)
+        # create a number as order number
 
-        ## print the full data set
-        order_list.append(['(' + f'{random_user}', f"'{order_id}'", f"'{item}'", f"'{random_date}')",''])
+        def generate_order_number(number):
+            orders = []
+            for i in range(1, number+1):
+                letters = string.ascii_uppercase
+                digits = string.digits
+                rand_letters = ''.join(random.choice(letters) for i in range(2))
+                rand_digits = ''.join(random.choice(digits) for i in range(6))
+                shipping_number = f'{rand_letters}-{rand_digits}'
+                orders.append(shipping_number)
+                return orders
+
+        def order_id(number):
+            for i in range(1,number):
+                order_id = random.choice(generate_order_number(number))
+                return order_id
+
+        ## print the full data set of orders
+        order_list.append(['(' + f'{random_user}', f"'{order_id(number)}'", f"'{item}'", f"'{random_date}')",''])
+
         count += 1
         with open('order_data.csv', mode='w', newline='', encoding='UTF8') as file:
             writer = csv.writer(file)
@@ -53,12 +66,15 @@ def generator(number):
         nation = random.choice(list(data_lists.country_keys))
         city = random.choice(data_lists.countries_cities[nation])
 
-
         ## print the full data set
         formatted_count = '{:05d}'.format(count) # 00001 format for the id
-        # for some weird reason if i added at the end a comma between " , " the final output gave me something that
-        # does not work on SQL
-        user_list.append(['(' + f'{formatted_count}', f"'{name}'", f"'{surname}'", f"'{nation}'", f"'{city}'", f"'{mail}')",''])
+
+
+
+        # for some weird reason if i added at the end, a comma between " ,
+        # " the final output gave me something that does not work on SQL
+        user_list.append(['(' + f'{formatted_count}', f"'{name}'",
+                          f"'{surname}'", f"'{nation}'", f"'{city}'", f"'{mail}')",''])
         count += 1
 
 
